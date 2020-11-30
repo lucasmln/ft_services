@@ -22,9 +22,6 @@ if [[ $? != 0 ]] ; then
 	fi
 fi
 
-echo "set minikube_home"
-#export MINIKUBE_HOME=/Users/$(whoami)/goinfre
-
 echo "Deleting previous cluster if there is one"
 minikube delete
 
@@ -38,8 +35,6 @@ minikube addons enable dashboard
 minikube addons enable metallb
 minikube addons enable metrics-server
 
-echo "\n#-------------------------------- LUNCH DASHBOARD ----------------------------\n"
-minikube dashboard &
 
 echo "\n#-------------------------- METALLB CONFIG ------------------------------\n"
 
@@ -53,35 +48,22 @@ kubectl apply -f srcs/yaml/metallb-configmap.yaml
 kubectl apply -f srcs/yaml/mysqlvol.yaml
 kubectl apply -f srcs/yaml/influxdbvol.yaml
 
-docker rmi nginx_i
 docker build -t nginx_i srcs/nginx/.
 
-#docker rmi mysql_i
 kubectl apply -f srcs/yaml/mysql.yaml
 docker build -t mysql_i srcs/mysql/.
 
-docker rmi phpmyadmin_i
 docker build -t phpmyadmin_i srcs/phpmyadmin/.
 
-docker rmi wordpress_i
 docker build -t wordpress_i srcs/wordpress/.
-echo "\n#------------------------------- FTPS IMAGE BUILD ----------------------------\n"
 
-docker rmi ftps_i
 docker build -t service_ftps --build-arg IP=${FTPS_IP} srcs/ftps
 
-echo "\n#------------------------------ INFLUXDB IMAGE BUILD ----------------------------\n"
-
-docker rmi influxdb_i
 docker build -t influxdb_i srcs/influxdb/.
 
-echo "\n#------------------------------ GRAFANA IMAGE BUILD ----------------------------\n"
-
-docker rmi grafana_i
 docker build -t grafana_i srcs/grafana/.
 
 echo "\n#----------------------------------- SETUP K8s ----------------------------\n"
-echo "\n#----------------------------------- FTPS CLUSTER ----------------------------\n"
 kubectl apply -f srcs/yaml/ftps.yaml
 
 kubectl apply -f srcs/yaml/nginx.yaml
@@ -95,3 +77,6 @@ kubectl apply -f srcs/yaml/influxdb.yaml
 kubectl apply -f srcs/yaml/phpmyadmin.yaml
 
 kubectl exec -i $(kubectl get pods | grep mysql | cut -d" " -f1) -- mysql wordpress -u root < srcs/mysql/wordpress.sql
+
+echo "\n#-------------------------------- LUNCH DASHBOARD ----------------------------\n"
+minikube dashboard &
