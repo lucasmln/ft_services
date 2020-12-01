@@ -22,11 +22,28 @@ if [[ $? != 0 ]] ; then
 	fi
 fi
 
+#Detect the platform
+OS="`uname`"
+#Change settings depending on the platform
+case $OS in
+		"Linux")
+			minikube start --vm-driver=docker --extra-config=apiserver.service-node-port-range=1-35000
+			#sed -i '' "s/192.168.99.120:5050/172.17.0.20:5050/g" src/mysql/wordpress.sql
+			#FTPS_IP=172.17.0.21
+		;;
+		"Darwin")
+			minikube start --driver=virtualbox --extra-config=apiserver.service-node-port-range=1-35000
+			#sed -i '' "s/192.168.99.120:5050/192.168.99.120:5050/g" src/mysql/wordpress.sql
+			#FTPS_IP=192.168.99.121
+		;;
+		*) ;;
+esac
+
 echo "Deleting previous cluster if there is one"
 minikube delete
 
 echo "Starting Minikube (it might take a while)"
-minikube start --vm-driver=virtualbox
+#minikube start --vm-driver=virtualbox
 FTPS_IP=192.168.99.129
 eval $(minikube docker-env)
 echo "#------------------ ADDONS MINIKUBE ------------------------------"
