@@ -11,18 +11,17 @@ OS="`uname`"
 echo "Starting Minikube (it might take a while)"
 case $OS in
 		"Linux")
-			minikube start --vm-driver=docker --extra-config=apiserver.service-node-port-range=1-35000
+			minikube start --vm-driver=docker #--extra-config=apiserver.service-node-port-range=1-35000
 			sed -i '' "s/192.168.99.111:5050/172.17.0.20:5050/g" srcs/mysql/wordpress.sql
 			FTPS_IP=172.17.0.21
 		;;
 		"Darwin")
-			minikube start --driver=virtualbox --extra-config=apiserver.service-node-port-range=1-35000
-			#sed -i '' "s/192.168.99.120:5050/192.168.99.120:5050/g" src/mysql/wordpress.sql
+			minikube start --vm-driver=virtualbox
+#			sed -i '' "s/192.168.99.120:5050/192.168.99.120:5050/g" src/mysql/wordpress.sql
 			FTPS_IP=192.168.99.129
 		;;
 		*) ;;
 esac
-
 
 #minikube start --vm-driver=virtualbox
 #FTPS_IP=192.168.99.129
