@@ -98,3 +98,4 @@ kubectl apply -f srcs/yaml/influxdb.yaml
 #kubectl apply -f srcs/yaml/phpmyadmin.yaml
 
 #kubectl exec -i $(kubectl get pods | grep mysql | cut -d" " -f1) -- mysql wordpress -u root < srcs/mysql/wordpress.sql
+CLUSTER_IP="$(kubectl get node -o=custom-columns='DATA:status.addresses[0].address' | sed -n 2p)"
