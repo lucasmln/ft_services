@@ -1,6 +1,8 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  annotations:
+    metallb.universe.tf/allow-shared-ip: shared
   name: nginx
   labels:
     app: nginx
@@ -47,4 +49,3 @@ spec:
       protocol: TCP
       port: 22
       targetPort: 22
-#  loadBalancerIP: 192.168.99.112
