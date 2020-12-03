@@ -27,6 +27,6 @@ COPY ./telegraf.conf /etc/telegraf/telegraf.conf
 ADD ./start.sh ./start.sh
 RUN chmod +x ./start.sh
 
-EXPOSE 5000 543
+EXPOSE 5000 443
 
 CMD ["./start.sh"]

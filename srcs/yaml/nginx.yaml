@@ -1,8 +1,8 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  annotations:
-    metallb.universe.tf/allow-shared-ip: shared
+  #annotations:
+   # metallb.universe.tf/allow-shared-ip: shared
   name: nginx
   labels:
     app: nginx
