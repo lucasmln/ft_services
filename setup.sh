@@ -2,29 +2,6 @@
 
 echo "\n#--------------------------MINIKUBE SETUP--------------------------------\n"
 
-#checking if brew is installed
-which -s brew
-if [[ $? != 0 ]] ; then
-	echo "Installing Brew..."
-	rm -rf $HOME/.brew && git clone --depth=1 https://github.com/Homebrew/brew $HOME/.brew && export PATH=$HOME/.brew/bin:$PATH && brew update && echo "export PATH=$HOME/.brew/bin:$PATH" >> ~/.zshrc &> /dev/null
-fi
-
-#checking if minikube is installed
-which -s minikube
-if [[ $? != 0 ]] ; then
-	echo -ne "\033[1;31m+>\033[0;33m Minikube installation ...\n"
-	if brew install minikube &> /dev/null
-	then
-		echo -ne "\033[1;32m+>\033[0;33m Minikube installed ! \n"
-	else
-		echo -ne "\033[1;31m+>\033[0;33m Error... During minikube installation. \n"
-		return 0
-	fi
-fi
-
-echo "Deleting previous cluster if there is one"
-minikube delete
-
 #Detect the platform
 OS="`uname`"
 #Change settings depending on the platform
@@ -32,12 +9,12 @@ case $OS in
 		"Linux")
 			minikube start --vm-driver=docker --extra-config=apiserver.service-node-port-range=1-35000
 			#sed -i '' "s/192.168.99.120:5050/172.17.0.20:5050/g" src/mysql/wordpress.sql
-			#FTPS_IP=172.17.0.21
+			FTPS_IP=172.17.0.21
 		;;
 		"Darwin")
 			minikube start --driver=virtualbox --extra-config=apiserver.service-node-port-range=1-35000
 			#sed -i '' "s/192.168.99.120:5050/192.168.99.120:5050/g" src/mysql/wordpress.sql
-			#FTPS_IP=192.168.99.121
+			FTPS_IP=192.168.99.121
 		;;
 		*) ;;
 esac
@@ -71,31 +48,31 @@ minikube dashboard &
 
 docker build -t nginx_i srcs/nginx/.
 
-#kubectl apply -f srcs/yaml/mysql.yaml
-#docker build -t mysql_i srcs/mysql/.
+kubectl apply -f srcs/yaml/mysql.yaml
+docker build -t mysql_i srcs/mysql/.
 
-#docker build -t phpmyadmin_i srcs/phpmyadmin/.
+docker build -t phpmyadmin_i srcs/phpmyadmin/.
 
-#docker build -t wordpress_i srcs/wordpress/.
+docker build -t wordpress_i srcs/wordpress/.
 
-#docker build -t service_ftps --build-arg IP=${FTPS_IP} srcs/ftps
+docker build -t service_ftps --build-arg IP=${FTPS_IP} srcs/ftps
 
 docker build -t influxdb_i srcs/influxdb/.
 
 docker build -t grafana_i srcs/grafana/.
 
 echo "\n#----------------------------------- SETUP K8s ----------------------------\n"
-#kubectl apply -f srcs/yaml/ftps.yaml
+kubectl apply -f srcs/yaml/ftps.yaml
 
 kubectl apply -f srcs/yaml/nginx.yaml
 
-#kubectl apply -f srcs/yaml/wordpress.yaml
+kubectl apply -f srcs/yaml/wordpress.yaml
 
 kubectl apply -f srcs/yaml/grafana.yaml
 
 kubectl apply -f srcs/yaml/influxdb.yaml
 
-#kubectl apply -f srcs/yaml/phpmyadmin.yaml
+kubectl apply -f srcs/yaml/phpmyadmin.yaml
 
-#kubectl exec -i $(kubectl get pods | grep mysql | cut -d" " -f1) -- mysql wordpress -u root < srcs/mysql/wordpress.sql
+kubectl exec -i $(kubectl get pods | grep mysql | cut -d" " -f1) -- mysql wordpress -u root < srcs/mysql/wordpress.sql
 CLUSTER_IP="$(kubectl get node -o=custom-columns='DATA:status.addresses[0].address' | sed -n 2p)"
