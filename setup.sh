@@ -2,6 +2,8 @@
 
 echo "\n#--------------------------MINIKUBE SETUP--------------------------------\n"
 
+minikube delete
+
 #Detect the platform
 OS="`uname`"
 #Change settings depending on the platform
@@ -21,7 +23,6 @@ esac
 
 echo "Starting Minikube (it might take a while)"
 #minikube start --vm-driver=virtualbox
-#FTPS_IP=192.168.99.129
 eval $(minikube docker-env)
 echo "#------------------ ADDONS MINIKUBE ------------------------------"
 
@@ -75,4 +76,4 @@ kubectl apply -f srcs/yaml/influxdb.yaml
 kubectl apply -f srcs/yaml/phpmyadmin.yaml
 
 kubectl exec -i $(kubectl get pods | grep mysql | cut -d" " -f1) -- mysql wordpress -u root < srcs/mysql/wordpress.sql
-CLUSTER_IP="$(kubectl get node -o=custom-columns='DATA:status.addresses[0].address' | sed -n 2p)"
+#CLUSTER_IP="$(kubectl get node -o=custom-columns='DATA:status.addresses[0].address' | sed -n 2p)"
