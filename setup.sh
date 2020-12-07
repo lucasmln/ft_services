@@ -45,11 +45,10 @@ kubectl apply -f srcs/yaml/mysqlvol.yaml
 kubectl apply -f srcs/yaml/influxdbvol.yaml
 
 CLUSTER_IP="$(kubectl get node -o=custom-columns='DATA:status.addresses[0].address' | sed -n 2p)"
-sed -i 's/172.17.0.3/'$CLUSTER_IP'/g' srcs/metallb/metallb-config.yaml
-sed -i 's/172.17.0.3/'$CLUSTER_IP'/g' srcs/ftps/start.sh
-sed -i 's/172.17.0.3/'$CLUSTER_IP'/g' srcs/nginx/nginx.conf
-sed -i 's/172.17.0.3/'$CLUSTER_IP'/g' srcs/wordpress/entry.sh
-sed -i 's/172.17.0.3/'$CLUSTER_IP'/g' srcs/telegraf/telegraf.conf
+sed -i 's/192.168.99.210/'$CLUSTER_IP'/g' srcs/metallb/metallb-config.yaml
+sed -i 's/192.168.99.210/'$CLUSTER_IP'/g' srcs/nginx/nginx.conf
+sed -i 's/192.168.99.210/'$CLUSTER_IP'/g' srcs/mysql/wordpress.sql
+FTPS_IP = $CLUSTER_IP
 echo "\n#-------------------------------- LUNCH DASHBOARD ----------------------------\n"
 minikube dashboard &
 
@@ -62,11 +61,11 @@ docker build -t phpmyadmin_i srcs/phpmyadmin/.
 
 docker build -t wordpress_i srcs/wordpress/.
 
-#docker build -t service_ftps --build-arg IP=${FTPS_IP} srcs/ftps
+docker build -t service_ftps --build-arg IP=${FTPS_IP} srcs/ftps
 
-#docker build -t influxdb_i srcs/influxdb/.
+docker build -t influxdb_i srcs/influxdb/.
 
-#docker build -t grafana_i srcs/grafana/.
+docker build -t grafana_i srcs/grafana/.
 
 echo "\n#----------------------------------- SETUP K8s ----------------------------\n"
 kubectl apply -f srcs/yaml/ftps.yaml
