@@ -20,7 +20,11 @@ case $OS in
 		;;
 		*) ;;
 esac
-
+CLUSTER_IP="$(kubectl get node -o=custom-columns='DATA:status.addresses[0].address' | sed -n 2p)"
+echo $CLUSTER_IP
+sed -i '' "s/192.168.99.210/"$CLUSTER_IP"/g" srcs/yaml/metallb-configmap.yaml
+sed -i '' "s/192.168.99.210/"$CLUSTER_IP"/g" srcs/nginx/default.conf
+sed -i '' "s/192.168.99.210/"$CLUSTER_IP"/g" srcs/mysql/wordpress.sql
 echo "Starting Minikube (it might take a while)"
 #minikube start --vm-driver=virtualbox
 eval $(minikube docker-env)
@@ -44,10 +48,7 @@ kubectl apply -f srcs/yaml/metallb-configmap.yaml
 kubectl apply -f srcs/yaml/mysqlvol.yaml
 kubectl apply -f srcs/yaml/influxdbvol.yaml
 
-CLUSTER_IP="$(kubectl get node -o=custom-columns='DATA:status.addresses[0].address' | sed -n 2p)"
-sed -i 's/192.168.99.210/'$CLUSTER_IP'/g' srcs/metallb/metallb-config.yaml
-sed -i 's/192.168.99.210/'$CLUSTER_IP'/g' srcs/nginx/nginx.conf
-sed -i 's/192.168.99.210/'$CLUSTER_IP'/g' srcs/mysql/wordpress.sql
+
 FTPS_IP = $CLUSTER_IP
 echo "\n#-------------------------------- LUNCH DASHBOARD ----------------------------\n"
 minikube dashboard &
