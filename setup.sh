@@ -83,4 +83,4 @@ kubectl apply -f srcs/yaml/wordpress.yaml
 kubectl apply -f srcs/yaml/phpmyadmin.yaml
 
 kubectl exec -i $(kubectl get pods | grep mysql | cut -d" " -f1) -- mysql wordpress -u root < srcs/mysql/wordpress.sql
-sed -i '' "s/"192.168.99.253"/"$CLUSTER_IP"/g" setup.sh
+sed -i '' "s/"192.168.99.253"/"$CLUSTER_IP"/g" ./setup.sh
