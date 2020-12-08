@@ -14,17 +14,16 @@ RUN echo "admin:admin" | chpasswd
 
 RUN rm /etc/nginx/conf.d/default.conf
 ADD ./default.conf /etc/nginx/conf.d/default.conf
-RUN mkdir /run/nginx
-RUN mkdir -p /usr/share/nginx/html
-ADD ./index.html /usr/share/nginx/html/index.html
-RUN chmod 666 /usr/share/nginx/html/index.html
+RUN mkdir -p var/run/nginx
+RUN mkdir -p html
+ADD ./index.html html/index.html
+RUN chmod 666 html/index.html
 RUN ssh-keygen -A
 RUN openssl req -x509 -nodes -days 7300 -subj "/C=FR/ST=Paris/O=21/OU=lmoulin/CN=www.localhost" -newkey rsa:2048 -keyout /etc/ssl/certs/localhost.key -out /etc/ssl/certs/localhost.crt
 
 COPY ./start.sh /start.sh
 RUN	 chmod +x ./start.sh
 
-
-EXPOSE 80 443 2222
+EXPOSE 80 443
 
 CMD ["/start.sh"]

@@ -19,9 +19,6 @@ COPY default.conf /etc/nginx/conf.d/default.conf
 
 RUN adduser -D user
 RUN echo "user:password" | chpasswd
-#RUN mkdir /etc/nginx/ssl
-#RUN ssh-keygen -A
-#RUN openssl req -x509 -nodes -days 7300 -subj "/C=FR/ST=Paris/O=21/OU=lmoulin/CN=www.localhost" -newkey rsa:2048 -keyout /etc/ssl/certs/localhost.key -out /etc/ssl/certs/localhost.crt
 
 RUN apk add	telegraf --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing/ --allow-untrusted --no-cache 
 RUN mkdir -p /etc/telegraf

@@ -1,9 +1,5 @@
 FROM alpine:latest
 
-#RUN apk update
-#RUN apk add php7 php7-fpm php7-opcache php7-gd php7-mysqli php7-zlib php7-curl  
-#RUN rc-update add php-fpm7 default
-
 RUN	apk update && apk add nginx openrc openssl openssh && apk add wget
 
 
@@ -17,11 +13,6 @@ RUN wget -O wordpress.zip https://wordpress.org/latest.zip \
 	&& rm wordpress.zip \
 	&& rm -rf /wordpress/wp-config.php \
 	&& rm -rf /var/cache/apk/*
-
-#RUN wget -O wordpress.zip https://wordpress.org/latest.zip
-#RUN unzip /wordpress.zip -d /
-#RUN rm -rf wordpress.zip
-#RUN rm -rf /wordpress/wp-config.php
 
 RUN wget http://wordpress.org/latest.tar.gz \
 		&& tar xzvf latest.tar.gz \
