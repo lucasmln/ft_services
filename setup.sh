@@ -10,7 +10,7 @@ OS="`uname`"
 case $OS in
 		"Linux")
 			minikube start --vm-driver=docker #--extra-config=apiserver.service-node-port-range=1-35000
-			sed -i '' "s/192.168.99.253:5050/192.168.49.2:5050/g" srcs/mysql/wordpress.sql
+			sed -i "s/192.168.99.253:5050/192.168.49.2:5050/g" srcs/mysql/wordpress.sql
 			FTPS_IP=192.168.49.2
 		;;
 		"Darwin")
