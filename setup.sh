@@ -11,16 +11,16 @@ case $OS in
 		"Linux")
 			minikube start --vm-driver=docker #--extra-config=apiserver.service-node-port-range=1-35000
 			CLUSTER_IP="$(kubectl get node -o=custom-columns='DATA:status.addresses[0].address' | sed -n 2p)"
-			sed -i "s/"192.168.99.253"/"$CLUSTER_IP"/g" srcs/yaml/metallb-configmap.yaml
-			sed -i "s/"192.168.99.253"/"$CLUSTER_IP"/g" srcs/nginx/defqult.conf
-			sed -i "s/"192.168.99.253"/"$CLUSTER_IP"/g" srcs/mysql/wordpress.sql
+			sed -i "s/"192.168.49.2"/"$CLUSTER_IP"/g" srcs/yaml/metallb-configmap.yaml
+			sed -i "s/"192.168.49.2"/"$CLUSTER_IP"/g" srcs/nginx/default.conf
+			sed -i "s/"192.168.49.2"/"$CLUSTER_IP"/g" srcs/mysql/wordpress.sql
 		;;
 		"Darwin")
 			minikube start --driver=virtualbox #--extra-config=apiserver.service-node-port-range=1-35000
 			CLUSTER_IP="$(kubectl get node -o=custom-columns='DATA:status.addresses[0].address' | sed -n 2p)"
-			sed -i '' "s/"192.168.99.253"/"$CLUSTER_IP"/g" srcs/yaml/metallb-configmap.yaml
-			sed -i '' "s/"192.168.99.253"/"$CLUSTER_IP"/g" srcs/nginx/default.conf
-			sed -i '' "s/"192.168.99.253"/"$CLUSTER_IP"/g" srcs/mysql/wordpress.sql
+			sed -i '' "s/"192.168.49.2"/"$CLUSTER_IP"/g" srcs/yaml/metallb-configmap.yaml
+			sed -i '' "s/"192.168.49.2"/"$CLUSTER_IP"/g" srcs/nginx/default.conf
+			sed -i '' "s/"192.168.49.2"/"$CLUSTER_IP"/g" srcs/mysql/wordpress.sql
 
 		;;
 		*) ;;
@@ -81,10 +81,10 @@ kubectl apply -f srcs/yaml/phpmyadmin.yaml
 kubectl exec -i $(kubectl get pods | grep mysql | cut -d" " -f1) -- mysql wordpress -u root < srcs/mysql/wordpress.sql
 case $OS in
 		"Linux")
-			sed -i "s/"192.168.99.253"/"$CLUSTER_IP"/g" ./setup.sh
+			sed -i "s/"192.168.49.2"/"$CLUSTER_IP"/g" ./setup.sh
 		;;
 		"Darwin")
-			sed -i '' "s/"192.168.99.253"/"$CLUSTER_IP"/g" ./setup.sh
+			sed -i '' "s/"192.168.49.2"/"$CLUSTER_IP"/g" ./setup.sh
 		;;
 		*) ;;
 esac
