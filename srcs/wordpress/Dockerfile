@@ -24,7 +24,8 @@ RUN rm /etc/nginx/conf.d/default.conf
 COPY ./default.conf /etc/nginx/conf.d/default.conf
 COPY ./wp-config.php /wordpress/wp-config.php
 
-RUN apk add telegraf --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing/ --allow-untrusted --no-cache
+#RUN apk add telegraf --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing/ --allow-untrusted --no-cache
+RUN wget https://dl.influxdata.com/telegraf/releases/telegraf-1.16.3_linux_amd64.tar.gz
 RUN mkdir -p /etc/telegraf
 COPY ./telegraf.conf /etc/telegraf/telegraf.conf
 
